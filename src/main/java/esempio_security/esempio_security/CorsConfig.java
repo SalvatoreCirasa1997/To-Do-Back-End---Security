@@ -14,12 +14,10 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry
                         .addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
+                        .allowedOrigins("${cors.allowedOrigins:http://localhost:3000}")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .exposedHeaders("*")
-                        .allowCredentials(false)
-                        .maxAge(-1);
+                        .maxAge(3600);
             }
         };
     }

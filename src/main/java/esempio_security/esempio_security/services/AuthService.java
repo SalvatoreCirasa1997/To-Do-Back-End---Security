@@ -18,28 +18,28 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final esempio_security.esempio_security.services.UserService UserService;
+    private final UserService userService;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder, esempio_security.esempio_security.services.UserService userService) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
-        UserService = userService;
+        this.userService = userService;
     }
 
-    public AuthenticationResponse login(LoginModel loginModel){
+    public AuthenticationResponse login(LoginModel loginModel) {
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginModel.getUsername(),
                         loginModel.getPassword()
                 )
         );
-        UserDetails userModel = this.UserService.loadUserByUsername(loginModel.getUsername());
+        UserDetails userModel = this.userService.loadUserByUsername(loginModel.getUsername());
         String jwtToken = this.jwtService.generateToken(userModel);
         return new AuthenticationResponse(jwtToken);
     }
 
-    public AuthenticationResponse signUp(SignUpModel signUpModel){
+    public AuthenticationResponse signUp(SignUpModel signUpModel) {
         UserModel userModel = new UserModel();
         userModel.setName(signUpModel.getNome());
         userModel.setUsername(signUpModel.getUsername());
@@ -47,16 +47,16 @@ public class AuthService {
         userModel.setCognome(signUpModel.getCognome());
         userModel.setEmail(signUpModel.getEmail());
         userModel.setRole(Role.USER);
-        UserModel userNew;
 
-        try{
-            userNew = this.UserService.saveUser(userModel);
-        }catch(DataIntegrityViolationException ex){
-            throw new DatiNonValidiException("Dati già presenti nel database");
+        UserModel userNew;
+        try {
+            userNew = this.userService.saveUser(userModel);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DatiNonValidiException("User data already exists in database");
         }
 
-        if(userNew == null){
-            throw new DatiNonValidiException("User non inserito!");
+        if (userNew == null) {
+            throw new DatiNonValidiException("User could not be created");
         }
         String jwtToken = this.jwtService.generateToken(userNew);
         return new AuthenticationResponse(jwtToken);

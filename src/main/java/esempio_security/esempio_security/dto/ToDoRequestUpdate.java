@@ -1,18 +1,20 @@
 package esempio_security.esempio_security.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public class ToDoRequestUpdate {
-    @NotBlank(message = "ID obbligatorio")
+    @NotNull(message = "ID is required")
     private Long id;
-    @NotBlank(message = "Todo obbligatorio")
+
+    @NotBlank(message = "Todo is required")
     private String todo;
+
     private boolean done;
-    @NotNull(message = "Inserire una data di nascita")
+
+    @NotNull(message = "Expiry date is required")
     private LocalDate expiryDate;
 
     public ToDoRequestUpdate(Long id, String todo, boolean done, LocalDate expiryDate) {
@@ -20,14 +22,6 @@ public class ToDoRequestUpdate {
         this.todo = todo;
         this.done = done;
         this.expiryDate = expiryDate;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
     }
 
     public Long getId() {
@@ -52,5 +46,13 @@ public class ToDoRequestUpdate {
 
     public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 }
